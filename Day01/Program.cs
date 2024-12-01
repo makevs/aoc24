@@ -1,6 +1,8 @@
-﻿namespace Day01;
+﻿using System.Text.RegularExpressions;
 
-internal class Program
+namespace Day01;
+
+internal partial class Program
 {
     protected static string FileContent => File.ReadAllText("day01.txt");
     private static List<int> _right = new List<int>();
@@ -21,7 +23,7 @@ internal class Program
     {
         FileContent.Split("\n").ToList().ForEach(var =>
         {
-            var split = var.Split("   ");
+            var split = MyRegex().Split(var);
             _left.Add(int.Parse(split[0]));
             _right.Add(int.Parse(split[1]));
         });
@@ -44,4 +46,7 @@ internal class Program
             _similarity += (i * _right.Count(x => x == i));
         }
     }
+
+    [GeneratedRegex(@"\s+")]
+    private static partial Regex MyRegex();
 }
