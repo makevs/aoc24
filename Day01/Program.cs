@@ -2,11 +2,11 @@
 
 namespace Day01;
 
-internal partial class Program
+internal abstract partial class Program
 {
-    protected static string FileContent => File.ReadAllText("day01.txt");
-    private static List<int> _right = new List<int>();
-    private static List<int> _left = new List<int>();
+    private static string FileContent => File.ReadAllText("day01.txt");
+    private static readonly List<int> Right = [];
+    private static readonly List<int> Left = [];
     private static double _distance = 0;
     private static double _similarity = 0;
     
@@ -24,26 +24,26 @@ internal partial class Program
         FileContent.Split("\n").ToList().ForEach(var =>
         {
             var split = MyRegex().Split(var);
-            _left.Add(int.Parse(split[0]));
-            _right.Add(int.Parse(split[1]));
+            Left.Add(int.Parse(split[0]));
+            Right.Add(int.Parse(split[1]));
         });
-        _left.Sort();
-        _right.Sort();
+        Left.Sort();
+        Right.Sort();
     }
     
     private static void CalculateDistance()
     {
-        for (int i = 0; i < _left.Count; i++)
+        for (int i = 0; i < Left.Count; i++)
         {
-            _distance += Math.Abs(_left[i] - _right[i]);
+            _distance += Math.Abs(Left[i] - Right[i]);
         }
     }
     
     private static void SimilarityScore()
     {
-        foreach (int i in _left)
+        foreach (int i in Left)
         {
-            _similarity += (i * _right.Count(x => x == i));
+            _similarity += (i * Right.Count(x => x == i));
         }
     }
 
