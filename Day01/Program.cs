@@ -33,18 +33,12 @@ internal abstract partial class Program
     
     private static void CalculateDistance()
     {
-        for (int i = 0; i < Left.Count; i++)
-        {
-            _distance += Math.Abs(Left[i] - Right[i]);
-        }
+        Left.ForEach(i => _distance += Math.Abs(i - Right[Left.IndexOf(i)]));
     }
     
     private static void SimilarityScore()
     {
-        foreach (int i in Left)
-        {
-            _similarity += (i * Right.Count(x => x == i));
-        }
+        Left.ForEach(i => _similarity += i * Right.Count(x => x == i));
     }
 
     [GeneratedRegex(@"\s+")]
