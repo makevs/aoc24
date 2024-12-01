@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using CommonUtils;
 
 namespace Day01;
 
@@ -9,6 +10,7 @@ internal abstract partial class Program
     private static readonly List<int> Left = [];
     private static double _distance = 0;
     private static double _similarity = 0;
+    private static readonly Regex R = RegexHelper.RemoveWhitespaces();
     
     private static void Main()
     {
@@ -23,7 +25,7 @@ internal abstract partial class Program
     {
         FileContent.Split("\n").ToList().ForEach(var =>
         {
-            var split = MyRegex().Split(var);
+            var split = R.Split(var);
             Left.Add(int.Parse(split[0]));
             Right.Add(int.Parse(split[1]));
         });
@@ -40,7 +42,4 @@ internal abstract partial class Program
     {
         Left.ForEach(i => _similarity += i * Right.Count(x => x == i));
     }
-
-    [GeneratedRegex(@"\s+")]
-    private static partial Regex MyRegex();
 }
