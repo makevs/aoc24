@@ -1,38 +1,52 @@
-﻿using System.Text.RegularExpressions;
-using CommonUtils;
-
-namespace Day02;
+﻿namespace Day02;
 
 class Program
 {
     private static string FileContent => File.ReadAllText("day02.txt");
-    private static readonly Regex R = RegexHelper.RemoveWhitespaces();
     private static int _safe = 0;
 
     static void Main(string[] args)
     {
-        FileContent.Split("\n").ToList().ForEach(var =>
+        FileContent.Split("\n").ToList().ForEach(line =>
         {
-            var line = R.Split(var);
-            var lineSet = new HashSet<int>(line.Select(int.Parse));
-            var lineSorted = line.ToList();
-            if (lineSet.Count == lineSorted.Count) CheckSafes(lineSet);
+            var lineIntArray = line.Split(' ').Select(int.Parse).ToArray();
+            CheckSafesPart2(lineIntArray);
         });
         Console.WriteLine(_safe);
     }
 
-    private static void CheckSafes(HashSet<int> line)
+    private static void CheckSafesPart2(int[] lineIntArray)
     {
-        int prev = line.First();
-        bool ascending = line.Skip(1).First() > prev;
-        foreach (var i in line.Skip(1))
+        // First check if the report is already safe
+        if (CheckSafes(lineIntArray))
         {
-            var tmp = i - prev;
-            if (Math.Abs(tmp) > 3) return;
-            prev = i;
-            if (tmp < 0 && ascending) return;
-            if (!ascending && tmp > 0) return;
+            _safe++;
+            return;
         }
-        _safe++;
+            
+        for (var i = 0; i < lineIntArray.Length; i++)
+        {
+            var dampenerArray = lineIntArray.Where((val, idx) => idx != i).ToArray();
+            if (!CheckSafes(dampenerArray)) continue;
+            _safe++;
+            return;
+        }
+    }
+
+    private static bool CheckSafes(int[] levels)
+    {
+        var ascending = true;
+        var descending = true;
+
+        for (var i = 1; i < levels.Length; i++)
+        {
+            var diff = levels[i] - levels[i - 1];
+            if (Math.Abs(diff) < 1 || Math.Abs(diff) > 3) return false;
+            
+            descending = diff > 0? descending : false;
+            ascending = diff < 0? ascending : false;
+            if (!ascending && !descending) return false;
+        }
+        return true;
     }
 }
